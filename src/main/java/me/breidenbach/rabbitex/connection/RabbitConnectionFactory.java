@@ -1,11 +1,15 @@
 package me.breidenbach.rabbitex.connection;
 
+
+import org.springframework.stereotype.Component;
+
 /**
  * User: Kevin E. Breidenbach
  * Date: 11/1/13
  * Time: 4:08 PM
  * © 2013 Kevin E. Breidenbach
  */
+@Component
 public class RabbitConnectionFactory {
 
     private RabbitConnectionCache cache = new RabbitConnectionCache();
