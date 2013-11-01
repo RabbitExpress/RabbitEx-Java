@@ -1,2 +1,2 @@
-RabbitExpress-Java
-==================
+RabbitEx-Java
+=============
