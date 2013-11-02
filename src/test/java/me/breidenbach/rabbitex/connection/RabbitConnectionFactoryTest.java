@@ -19,7 +19,6 @@ public class RabbitConnectionFactoryTest {
     private final int port = 1;
     private final String virtualHost = "";
     private final String username = "";
-    private final String password = "";
 
     private RabbitConnectionFactory factory;
 
@@ -45,10 +44,9 @@ public class RabbitConnectionFactoryTest {
     }
 
     @Test
-    public void rabbitConnectionCached() throws RabbitConnectionException {
+    public void rabbitConnectionCached(final @Mocked RabbitConnectionCache cache) throws RabbitConnectionException {
 
         new Expectations() {
-            @Mocked("retrieve") RabbitConnectionCache cache;
             {
                 cache.retrieve(hostname, port, virtualHost, username); result = mockedConnection;
             }

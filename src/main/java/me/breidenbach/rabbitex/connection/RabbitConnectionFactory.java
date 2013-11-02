@@ -1,6 +1,7 @@
 package me.breidenbach.rabbitex.connection;
 
 
+import com.rabbitmq.client.ConnectionFactory;
 import me.breidenbach.rabbitex.RabbitEx;
 import org.springframework.stereotype.Component;
 
@@ -24,9 +25,27 @@ public class RabbitConnectionFactory {
 
         RabbitConnection connection = cache.retrieve(host, port, virtualHost, username);
         if (connection == null || connection.isClosed()) {
-            connection = new RabbitConnection(cache, host, port, virtualHost, username, password);
+            ConnectionFactory factory = createConnectionFactory(host, port, virtualHost, username, password);
+            connection = new RabbitConnection(cache, factory);
             cache.cache(host, port, virtualHost, username, connection);
         }
         return connection;
+    }
+
+    private ConnectionFactory createConnectionFactory(String host, int port, String virtualHost,
+                                                      String username, String password) {
+        ConnectionFactory factory = new ConnectionFactory();
+        factory.setHost(host);
+        factory.setPort(port);
+        if (virtualHost != null && !virtualHost.isEmpty()) {
+            factory.setVirtualHost(virtualHost);
+        }
+        if (username != null && !username.isEmpty()) {
+            factory.setUsername(username);
+        }
+        if (password != null && !password.isEmpty()) {
+            factory.setPassword(password);
+        }
+        return factory;
     }
 }

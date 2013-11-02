@@ -30,12 +30,12 @@ public class RabbitConnectionCacheTest {
     }
 
     @Test
-    public void testRetrieve() throws Exception {
+    public void retrieve() throws Exception {
         assertSame(mockedConnection, testCache.retrieve(hostname, port, virtualHost, username));
     }
 
     @Test
-    public void testRemove() throws Exception {
+    public void remove() throws Exception {
         testCache.remove(hostname, port, virtualHost, username);
         assertNull(testCache.retrieve(hostname, port, virtualHost, username));
     }

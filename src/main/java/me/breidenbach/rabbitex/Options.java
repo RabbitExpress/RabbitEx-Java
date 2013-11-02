@@ -8,8 +8,6 @@ package me.breidenbach.rabbitex;
  */
 
 public enum Options {
-    NACK_OBJECT,
-    NACK_METHOD,
     ERROR_EXCHANGE,
     ERROR_SUBJECT
 }

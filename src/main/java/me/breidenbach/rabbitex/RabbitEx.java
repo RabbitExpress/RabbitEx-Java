@@ -1,5 +1,7 @@
 package me.breidenbach.rabbitex;
 
+import me.breidenbach.rabbitex.connection.RabbitConnectionException;
+
 import java.io.Closeable;
 import java.util.Map;
 
@@ -12,9 +14,9 @@ import java.util.Map;
 
 public interface RabbitEx extends Closeable {
 
-    void publish(String exchange, String subject, Map<Options, String> options);
+    void publish(String exchange, String subject, String message, Map<Options, String> options) throws RabbitConnectionException;
 
-    Consumer consumer(String exchange, String subject, String queue);
+    Consumer consumer(String exchange, String subject, String queue) throws RabbitConnectionException;
 
 }
 
