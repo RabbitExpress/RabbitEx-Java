@@ -1,6 +1,7 @@
 package me.breidenbach.rabbitex.connection;
 
 
+import me.breidenbach.rabbitex.RabbitEx;
 import org.springframework.stereotype.Component;
 
 /**
@@ -14,17 +15,17 @@ public class RabbitConnectionFactory {
 
     private RabbitConnectionCache cache = new RabbitConnectionCache();
 
-    public RabbitConnection rabbitConnection(String listenAddress, int listenPort) throws RabbitConnectionException {
-        return rabbitConnection (listenAddress, listenPort, "", "", "");
+    public RabbitEx rabbitConnection(String host, int port) throws RabbitConnectionException {
+        return rabbitConnection (host, port, "", "", "");
     }
 
-    public RabbitConnection rabbitConnection(String listenAddress, int listenPort, String virtualHost,
+    public RabbitEx rabbitConnection(String host, int port, String virtualHost,
                                              String username, String password) throws RabbitConnectionException {
 
-        RabbitConnection connection = cache.retrieve(listenAddress, listenPort, virtualHost, username);
+        RabbitConnection connection = cache.retrieve(host, port, virtualHost, username);
         if (connection == null || connection.isClosed()) {
-            connection = new RabbitConnection(cache, listenAddress, listenPort, virtualHost, username, password);
-            cache.cache(listenAddress, listenPort, virtualHost, username, connection);
+            connection = new RabbitConnection(cache, host, port, virtualHost, username, password);
+            cache.cache(host, port, virtualHost, username, connection);
         }
         return connection;
     }

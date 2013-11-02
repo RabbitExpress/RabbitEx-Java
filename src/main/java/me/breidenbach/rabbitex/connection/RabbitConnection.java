@@ -1,6 +1,7 @@
 package me.breidenbach.rabbitex.connection;
 
 import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
 import me.breidenbach.rabbitex.Consumer;
 import me.breidenbach.rabbitex.Options;
 import me.breidenbach.rabbitex.RabbitEx;
@@ -17,8 +18,8 @@ import java.util.Map;
 public class RabbitConnection implements RabbitEx {
 
     private final RabbitConnectionCache cache;
-    private final String listenAddress;
-    private final int listenPort;
+    private final String host;
+    private final int port;
     private final String virtualHost;
     private final String username;
     private final String password;
@@ -27,11 +28,11 @@ public class RabbitConnection implements RabbitEx {
 
     private boolean closed = false;
 
-    RabbitConnection(RabbitConnectionCache cache, String listenAddress, int listenPort, String virtualHost,
+    RabbitConnection(RabbitConnectionCache cache, String host, int port, String virtualHost,
                      String username, String password) throws RabbitConnectionException {
         this.cache = cache;
-        this.listenAddress = listenAddress;
-        this.listenPort = listenPort;
+        this.host = host;
+        this.port = port;
         this.virtualHost = virtualHost;
         this.username = username;
         this.password = password;
@@ -41,7 +42,7 @@ public class RabbitConnection implements RabbitEx {
     @Override
     public void close() throws IOException {
         connection.close();
-        cache.remove(listenAddress, listenPort, virtualHost, username);
+        cache.remove(host, port, virtualHost, username);
         closed = true;
     }
 
@@ -59,9 +60,17 @@ public class RabbitConnection implements RabbitEx {
         return closed;
     }
 
-    private Connection prepareRabbitConnection() {
-        return null;
+    private Connection prepareRabbitConnection() throws RabbitConnectionException {
+        ConnectionFactory factory = new ConnectionFactory();
+        factory.setHost(host);
+        factory.setPort(port);
+        factory.setVirtualHost(virtualHost);
+        factory.setUsername(username);
+        factory.setPassword(password);
+        try {
+            return factory.newConnection();
+        } catch (IOException e) {
+            throw new RabbitConnectionException("Unable to create connection: " + e.getMessage(), e);
+        }
     }
-
-
 }
