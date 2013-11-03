@@ -3,6 +3,7 @@ package me.breidenbach.rabbitex.connection;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
+import me.breidenbach.rabbitex.MessageHandler;
 import me.breidenbach.rabbitex.Options;
 import mockit.Expectations;
 import mockit.Mocked;
@@ -22,10 +23,7 @@ import static org.junit.Assert.assertTrue;
  * © 2013 Kevin E. Breidenbach
  */
 public class RabbitConnectionTest {
-    private static final String HOSTNAME = "test.com";
-    private static final int PORT = 1;
-    private static final String VIRTUAL_HOST = "test";
-    private static final String USERNAME = "username";
+
     private static final String EXCHANGE = "exchange";
     private static final String SUBJECT = "subject";
     private static final String MESSAGE = "message";
@@ -146,7 +144,7 @@ public class RabbitConnectionTest {
             }
         };
         testConnection = new RabbitConnection(mockedCache, mockedFactory);
-        testConnection.publishError(EXCHANGE, SUBJECT, MESSAGE);
+        testConnection.publishError(EXCHANGE, SUBJECT, MessageHandler.Response.REJECT, MESSAGE);
     }
 
     @Test

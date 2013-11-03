@@ -1,5 +1,6 @@
 package me.breidenbach.rabbitex;
 
+
 import java.io.IOException;
 
 /**
@@ -10,5 +11,4 @@ import java.io.IOException;
  */
 public interface Consumer {
     void start() throws IOException;
-    void stop();
 }

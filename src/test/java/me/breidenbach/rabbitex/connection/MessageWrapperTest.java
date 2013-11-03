@@ -1,5 +1,6 @@
 package me.breidenbach.rabbitex.connection;
 
+import me.breidenbach.rabbitex.MessageHandler;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -39,7 +40,7 @@ public class MessageWrapperTest {
         testWrapper = new MessageWrapper(MESSAGE, MessageWrapper.MessageType.ERROR);
         testWrapper.setErrorExchange("ErrorExchange");
         testWrapper.setErrorSubject("ErrorSubject");
-        testWrapper.setErrorAction(MessageWrapper.ErrorAction.REJECT);
+        testWrapper.setErrorAction(MessageHandler.Response.REJECT);
         String json = testWrapper.toJson();
         assertEquals(EXPECTED_ERROR, json);
     }
@@ -51,6 +52,6 @@ public class MessageWrapperTest {
         assertEquals(MESSAGE, wrapper.getMessage());
         assertEquals("ErrorExchange", wrapper.getErrorExchange());
         assertEquals("ErrorSubject", wrapper.getErrorSubject());
-        assertEquals(MessageWrapper.ErrorAction.REJECT, wrapper.getErrorAction());
+        assertEquals(MessageHandler.Response.REJECT, wrapper.getErrorAction());
     }
 }

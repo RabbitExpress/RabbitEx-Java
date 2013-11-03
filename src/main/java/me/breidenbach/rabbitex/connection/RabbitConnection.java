@@ -61,10 +61,15 @@ public class RabbitConnection implements RabbitEx {
         return closed;
     }
 
-    void publishError(final String exchange, final String subject, final String message)
+    void publishError(final String exchange, final String subject, final MessageHandler.Response action, final String message)
             throws RabbitConnectionException {
         MessageWrapper wrapper = createWrapper(message, MessageWrapper.MessageType.ERROR, null);
+        wrapper.setErrorAction(action);
         publishMessage(exchange, subject, wrapper);
+    }
+
+    Connection connection() {
+        return connection;
     }
 
     private void publishMessage(final String exchange, final String subject, final MessageWrapper wrapper)

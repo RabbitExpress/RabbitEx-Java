@@ -2,6 +2,7 @@ package me.breidenbach.rabbitex.connection;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import me.breidenbach.rabbitex.MessageHandler;
 
 /**
  * User: Kevin E. Breidenbach
@@ -14,16 +15,13 @@ class MessageWrapper {
         MESSAGE, ERROR
     }
 
-    static enum ErrorAction {
-        REQUEUE, REJECT
-    }
 
     private final String message;
     private final MessageType messageType;
 
     private String errorExchange;
     private String errorSubject;
-    private ErrorAction errorAction;
+    private MessageHandler.Response errorAction;
 
     MessageWrapper(final String message) {
         this(message, null);
@@ -43,8 +41,8 @@ class MessageWrapper {
     void setErrorSubject(final String errorSubject) { this.errorSubject = errorSubject; }
     String getErrorSubject() { return errorSubject; }
 
-    void setErrorAction(final ErrorAction errorAction) { this.errorAction = errorAction; }
-    ErrorAction getErrorAction() { return errorAction; }
+    void setErrorAction(final MessageHandler.Response errorAction) { this.errorAction = errorAction; }
+    MessageHandler.Response getErrorAction() { return errorAction; }
 
     String toJson() {
         Gson gson = new GsonBuilder().create();
