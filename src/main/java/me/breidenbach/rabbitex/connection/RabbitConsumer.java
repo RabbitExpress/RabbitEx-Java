@@ -42,35 +42,44 @@ public class RabbitConsumer implements Consumer {
 
     @Override
     public void start() throws IOException {
-        channel.basicConsume(queue, AUTO_ACK, new DefaultConsumer(channel) {
+        DefaultConsumer defaultConsumer = createDefaultConsumer();
+        channel.basicConsume(queue, AUTO_ACK, defaultConsumer);
+    }
+
+    private DefaultConsumer createDefaultConsumer() {
+        return new DefaultConsumer(channel) {
             @Override
             public void handleDelivery(String consumerTag, Envelope envelope,
                                        AMQP.BasicProperties properties, byte[] body) throws IOException {
-                String json = new String(body);
-                long deliveryTag = envelope.getDeliveryTag();
-                MessageWrapper wrapper = MessageWrapper.fromJson(json);
-                MessageHandler.Response response = handler.handleMessage(wrapper.getMessage());
-
-                try {
-                    switch (response) {
-                        case ACK:
-                            channel.basicAck(deliveryTag, false);
-                            break;
-                        case REQUEUE:
-                            channel.basicNack(deliveryTag, false, true);
-                            sendErrorMessage(wrapper, response);
-                            break;
-                        case REJECT:
-                            channel.basicNack(deliveryTag, false, false);
-                            sendErrorMessage(wrapper, response);
-                            break;
-                    }
-                } catch (RabbitConnectionException e) {
-                    // we can't do a lot with this, so eat it.
-                    e.printStackTrace();
-                }
+                handler(envelope, body);
             }
-        });
+        };
+    }
+
+    private void handler(Envelope envelope, byte[] body) throws IOException {
+        String json = new String(body);
+        long deliveryTag = envelope.getDeliveryTag();
+        MessageWrapper wrapper = MessageWrapper.fromJson(json);
+        MessageHandler.Response response = handler.handleMessage(wrapper.getMessage());
+
+        try {
+            switch (response) {
+                case ACK:
+                    channel.basicAck(deliveryTag, false);
+                    break;
+                case REQUEUE:
+                    channel.basicNack(deliveryTag, false, true);
+                    sendErrorMessage(wrapper, response);
+                    break;
+                case REJECT:
+                    channel.basicNack(deliveryTag, false, false);
+                    sendErrorMessage(wrapper, response);
+                    break;
+            }
+        } catch (RabbitConnectionException e) {
+            // we can't do a lot with this, so eat it.
+            e.printStackTrace();
+        }
     }
 
     private void sendErrorMessage(MessageWrapper wrapper, MessageHandler.Response response) throws RabbitConnectionException {
@@ -80,5 +89,4 @@ public class RabbitConsumer implements Consumer {
             connection.publishError(exchange, subject, response, wrapper.getMessage());
         }
     }
-
 }
