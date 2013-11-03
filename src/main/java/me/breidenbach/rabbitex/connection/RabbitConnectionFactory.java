@@ -16,12 +16,12 @@ public class RabbitConnectionFactory {
 
     private RabbitConnectionCache cache = new RabbitConnectionCache();
 
-    public RabbitEx rabbitConnection(String host, int port) throws RabbitConnectionException {
+    public RabbitEx rabbitConnection(final String host, final int port) throws RabbitConnectionException {
         return rabbitConnection (host, port, "", "", "");
     }
 
-    public RabbitEx rabbitConnection(String host, int port, String virtualHost,
-                                             String username, String password) throws RabbitConnectionException {
+    public RabbitEx rabbitConnection(final String host, final int port, final String virtualHost,
+                                     final String username, final String password) throws RabbitConnectionException {
 
         RabbitConnection connection = cache.retrieve(host, port, virtualHost, username);
         if (connection == null || connection.isClosed()) {
@@ -32,8 +32,8 @@ public class RabbitConnectionFactory {
         return connection;
     }
 
-    private ConnectionFactory createConnectionFactory(String host, int port, String virtualHost,
-                                                      String username, String password) {
+    private ConnectionFactory createConnectionFactory(final String host, final int port, final String virtualHost,
+                                                      final String username, final String password) {
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost(host);
         factory.setPort(port);

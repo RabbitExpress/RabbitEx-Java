@@ -11,7 +11,7 @@ import com.google.gson.GsonBuilder;
  */
 class MessageWrapper {
     static enum MessageType {
-        MESSAGE, ERROR;
+        MESSAGE, ERROR
     }
 
     static enum ErrorAction {
@@ -25,11 +25,11 @@ class MessageWrapper {
     private String errorSubject;
     private ErrorAction errorAction;
 
-    MessageWrapper(String message) {
+    MessageWrapper(final String message) {
         this(message, null);
     }
 
-    MessageWrapper(String message, MessageType messageType) {
+    MessageWrapper(final String message, final MessageType messageType) {
         this.message = message;
         this.messageType = messageType == null ? MessageType.MESSAGE : messageType;
     }
@@ -37,13 +37,13 @@ class MessageWrapper {
     String getMessage() { return message; }
     MessageType getMessageType() {return messageType; }
 
-    void setErrorExchange(String errorExchange) { this.errorExchange = errorExchange; }
+    void setErrorExchange(final String errorExchange) { this.errorExchange = errorExchange; }
     String getErrorExchange() { return errorExchange; }
 
-    void setErrorSubject(String errorSubject) { this.errorSubject = errorSubject; }
+    void setErrorSubject(final String errorSubject) { this.errorSubject = errorSubject; }
     String getErrorSubject() { return errorSubject; }
 
-    void setErrorAction(ErrorAction errorAction) { this.errorAction = errorAction; }
+    void setErrorAction(final ErrorAction errorAction) { this.errorAction = errorAction; }
     ErrorAction getErrorAction() { return errorAction; }
 
     String toJson() {
@@ -51,7 +51,7 @@ class MessageWrapper {
         return gson.toJson(this);
     }
 
-    static MessageWrapper fromJson(String json) {
+    static MessageWrapper fromJson(final String json) {
         Gson gson = new GsonBuilder().create();
         return gson.fromJson(json, MessageWrapper.class);
     }

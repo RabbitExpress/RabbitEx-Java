@@ -14,9 +14,11 @@ import java.util.Map;
 
 public interface RabbitEx extends Closeable {
 
-    void publish(String exchange, String subject, String message, Map<Options, String> options) throws RabbitConnectionException;
+    void publish(final String exchange, final String subject,
+                 final String message, final Map<Options, String> options) throws RabbitConnectionException;
 
-    Consumer consumer(String exchange, String subject, String queue) throws RabbitConnectionException;
+    Consumer consumer(final String exchange, final String subject,
+                      final String queue, final MessageHandler handler) throws RabbitConnectionException;
 
 }
 

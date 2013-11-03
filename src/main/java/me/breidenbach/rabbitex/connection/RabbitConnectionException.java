@@ -7,7 +7,7 @@ package me.breidenbach.rabbitex.connection;
  * © 2013 Kevin E. Breidenbach
  */
 public class RabbitConnectionException extends Exception {
-    RabbitConnectionException(String message, Throwable cause) {
+    RabbitConnectionException(final String message, final Throwable cause) {
         super(message, cause);
     }
 }

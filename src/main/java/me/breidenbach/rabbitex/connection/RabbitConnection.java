@@ -5,6 +5,7 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import me.breidenbach.rabbitex.Consumer;
+import me.breidenbach.rabbitex.MessageHandler;
 import me.breidenbach.rabbitex.Options;
 import me.breidenbach.rabbitex.RabbitEx;
 
@@ -20,6 +21,7 @@ import java.util.Map;
  */
 public class RabbitConnection implements RabbitEx {
     private static final boolean MANDATORY = true;
+    private static final String EXCHANGE_TYPE = "topic";
 
     private final RabbitConnectionCache cache;
     private final ConnectionFactory factory;
@@ -28,7 +30,8 @@ public class RabbitConnection implements RabbitEx {
 
     private boolean closed = false;
 
-    RabbitConnection(RabbitConnectionCache cache, ConnectionFactory factory) throws RabbitConnectionException {
+    RabbitConnection(final RabbitConnectionCache cache, final ConnectionFactory factory)
+            throws RabbitConnectionException {
         this.cache = cache;
         this.factory = factory;
         this.connection = prepareRabbitConnection();
@@ -42,14 +45,15 @@ public class RabbitConnection implements RabbitEx {
     }
 
     @Override
-    public void publish(String exchange, String subject, String message, Map<Options, String> options) throws RabbitConnectionException {
+    public void publish(final String exchange, final String subject,
+                        final String message, final Map<Options, String> options) throws RabbitConnectionException {
         MessageWrapper wrapper = createWrapper(message, MessageWrapper.MessageType.MESSAGE, options);
         publishMessage(exchange, subject, wrapper);
     }
 
     @Override
-    public Consumer consumer(String exchange, String subject, String queue) throws RabbitConnectionException {
-
+    public Consumer consumer(final String exchange, final String subject,
+                             final String queue, final MessageHandler handler) throws RabbitConnectionException {
         return null;
     }
 
@@ -57,18 +61,21 @@ public class RabbitConnection implements RabbitEx {
         return closed;
     }
 
-    void publish_error(String exchange, String subject, String message) throws RabbitConnectionException {
+    void publishError(final String exchange, final String subject, final String message)
+            throws RabbitConnectionException {
         MessageWrapper wrapper = createWrapper(message, MessageWrapper.MessageType.ERROR, null);
         publishMessage(exchange, subject, wrapper);
     }
 
-    private void publishMessage(String exchange, String subject, MessageWrapper wrapper) throws RabbitConnectionException {
+    private void publishMessage(final String exchange, final String subject, final MessageWrapper wrapper)
+            throws RabbitConnectionException {
         AMQP.BasicProperties.Builder builder =  new AMQP.BasicProperties.Builder();
         String json = wrapper.toJson();
         builder.deliveryMode(2);
         builder.timestamp(Calendar.getInstance().getTime());
         try {
             Channel channel = connection.createChannel();
+            channel.exchangeDeclare(exchange, EXCHANGE_TYPE, true);
             channel.basicPublish(exchange, subject, MANDATORY, builder.build(), json.getBytes());
         } catch (IOException e) {
             throw new RabbitConnectionException("Unable to publish message", e);
@@ -83,7 +90,8 @@ public class RabbitConnection implements RabbitEx {
         }
     }
 
-    private MessageWrapper createWrapper(String message, MessageWrapper.MessageType type, Map<Options,String> options) {
+    private MessageWrapper createWrapper(final String message, final MessageWrapper.MessageType type,
+                                         final Map<Options,String> options) {
         MessageWrapper wrapper = new MessageWrapper(message, type);
         if (options != null) {
             for (Options key: options.keySet()) {

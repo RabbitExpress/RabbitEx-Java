@@ -15,24 +15,24 @@ class RabbitConnectionCache {
 
     RabbitConnectionCache() { }
 
-    void cache(String listenAddress, int listenPort, String virtualHost,
-                        String username, RabbitConnection connection) {
+    void cache(final String listenAddress, final int listenPort, final String virtualHost,
+                        final String username, final RabbitConnection connection) {
         connections.put(createKey(listenAddress, listenPort, virtualHost, username), connection);
     }
 
-    RabbitConnection retrieve(String listenAddress, int listenPort, String virtualHost,
-                              String username) {
+    RabbitConnection retrieve(final String listenAddress, final int listenPort,
+                              final String virtualHost, final String username) {
         return connections.get(createKey(listenAddress, listenPort, virtualHost, username));
     }
 
-    void remove(String listenAddress, int listenPort, String virtualHost,
-                String username) {
+    void remove(final String listenAddress, final int listenPort,
+                final String virtualHost, final String username) {
         connections.remove(createKey(listenAddress, listenPort, virtualHost, username));
     }
 
 
-    private String createKey(String listenAddress, int listenPort, String virtualHost,
-                             String username) {
+    private String createKey(final String listenAddress, final int listenPort,
+                             final String virtualHost, final String username) {
         return listenAddress + listenPort + virtualHost + username;
     }
 }
