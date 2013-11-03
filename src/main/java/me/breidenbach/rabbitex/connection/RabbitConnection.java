@@ -20,7 +20,6 @@ import java.util.Map;
  * © 2013 Kevin E. Breidenbach
  */
 public class RabbitConnection implements RabbitEx {
-    private static final boolean MANDATORY = true;
     private static final String EXCHANGE_TYPE = "topic";
 
     private final RabbitConnectionCache cache;
@@ -81,7 +80,7 @@ public class RabbitConnection implements RabbitEx {
         try {
             Channel channel = connection.createChannel();
             channel.exchangeDeclare(exchange, EXCHANGE_TYPE, true);
-            channel.basicPublish(exchange, subject, MANDATORY, builder.build(), json.getBytes());
+            channel.basicPublish(exchange, subject, builder.build(), json.getBytes());
         } catch (IOException e) {
             throw new RabbitConnectionException("Unable to publish message", e);
         }
