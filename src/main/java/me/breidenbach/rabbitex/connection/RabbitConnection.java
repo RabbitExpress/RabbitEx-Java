@@ -54,7 +54,7 @@ public class RabbitConnection implements RabbitEx {
     @Override
     public Consumer consumer(final String exchange, final String subject,
                              final String queue, final MessageHandler handler) throws RabbitConnectionException {
-        return null;
+        return new RabbitConsumer(this, exchange, subject, queue, handler);
     }
 
     public boolean isClosed() {
