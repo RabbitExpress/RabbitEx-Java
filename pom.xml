@@ -7,7 +7,7 @@
     <artifactId>RabbitEx</artifactId>
     <version>0.2-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>RabbitEx</name>
+    <name>rabbitex</name>
     <description>A simplified RabbitMQ API</description>
     <url>https://github.com/RabbitExpress/RabbitEx-Java</url>
     <developers>
@@ -148,3 +148,4 @@
         </profile>
     </profiles>
 </project>
+
