@@ -14,10 +14,10 @@ import java.util.Calendar;
 import java.util.Map;
 
 /**
- * User: Kevin E. Breidenbach
  * Date: 11/1/13
  * Time: 3:59 PM
  * © 2013 Kevin E. Breidenbach
+ * @author Kevin E. Breidenbach
  */
 public class RabbitConnection implements RabbitEx {
     private static final String EXCHANGE_TYPE = "topic";
