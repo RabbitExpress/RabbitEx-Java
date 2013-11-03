@@ -15,6 +15,7 @@ public interface MessageHandler {
 
     /*
      * The method to be implemented by the handler to process the message
+     *
      * @param message is the String message that will be delivered by the consumer
      */
     Response handleMessage(final String message);

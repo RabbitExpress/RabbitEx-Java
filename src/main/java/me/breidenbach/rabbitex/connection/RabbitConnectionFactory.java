@@ -21,6 +21,8 @@ public class RabbitConnectionFactory {
      * for all message handling
      * @param host the hostname of the RabbitMQ service
      * @param port the port number rabbit is running on
+     * @return the RabbitEx instance to handle communications with RabbitMQ
+     * @throws RabbitConnectionException any errors connecting to RabbitMQ
      */
     public RabbitEx rabbitConnection(final String host, final int port) throws RabbitConnectionException {
         return rabbitConnection (host, port, "", "", "");
@@ -34,6 +36,8 @@ public class RabbitConnectionFactory {
      * @param virtualHost the name of the virtual host to use (e.g. test)
      * @param username the username to connect to the virtual host
      * @param password the password to authenticate with
+     * @return the RabbitEx instance to handle communications with RabbitMQ
+     * @throws RabbitConnectionException any errors connecting to RabbitMQ
      */
     public RabbitEx rabbitConnection(final String host, final int port, final String virtualHost,
                                      final String username, final String password) throws RabbitConnectionException {

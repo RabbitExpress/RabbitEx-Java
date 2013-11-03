@@ -11,7 +11,8 @@ import java.io.IOException;
  */
 public interface Consumer {
     /*
-     * starts the consumer
+     * Starts the consumer
+     *
      */
     void start() throws IOException;
 }
