@@ -44,7 +44,45 @@ The 4th parameter, which is null here, can be used to set an "error exchange" an
 Consume a Message
 -----------------
 
+Again, very simple
 
+```
+Consumer consumer = rabbitEx.consume(EXCHANGE, SUBJECT, QUEUE, myHandler);
+consumer.start();
+```
 
+myHandler is an object of a type that implements MessageHandler, e.g.
+```
+public class MyHandler implements MessageHandler {
+
+  @Override
+  public Response handleMessage(String message) {
+    System.out.println("Message: " + message);
+    return Response.ACK;
+  }
+}
+```
+
+The MessageHandler interface comes with three simple responses. 
+```Response.ACK``` which means everything is ok. 
+```Response.REJECT``` tells the system there was an issue (nack) and to reject the message 
+```Response.REQUEUE``` tells the system there was an issue and to requeue and try again
+
+Either "REJECT" or "REQUEUE" will use (if sent with the publish call) the ERROR_EXCHANGE and ERROR_SUBJECT fields to send the error along with the action taken (REQUEUE or REJECT)
+
+Queues and Wildcards
+--------------------
+
+Subjects use dot '.' delimited phrases to specify a subject. For instance. 'library.books.fiction'
+A Queue can be bound to a specific subject, and will only receive messages that were sent to that exact subject phrase.
+
+It is however possible to listen to multiple subjects and to do this we use wildcards.
+
+'\#' can be used as a wildcard to find anything in the next level up.
+e.g.
+'library.#' would receive anything sent to library, or library.books, or library.magazines, but would not receive library.books.fiction
+
+'\*' can be used to get anything (no matter how many dots are used)
+so 'library.*' would get library, library.books, library.magazines and library.books.fiction
 
 
