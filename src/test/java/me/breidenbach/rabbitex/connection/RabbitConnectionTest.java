@@ -3,6 +3,7 @@ package me.breidenbach.rabbitex.connection;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
+import me.breidenbach.rabbitex.Consumer;
 import me.breidenbach.rabbitex.MessageHandler;
 import me.breidenbach.rabbitex.Options;
 import mockit.Expectations;
@@ -14,6 +15,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static junit.framework.Assert.assertNotNull;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -26,6 +29,7 @@ public class RabbitConnectionTest {
 
     private static final String EXCHANGE = "exchange";
     private static final String SUBJECT = "subject";
+    private static final String QUEUE = "queue";
     private static final String MESSAGE = "message";
     private static final String ERROR_EXCHANGE = "ERROR_EXCHANGE";
     private static final String ERROR_SUBJECT = "ERROR_SUBJECT";
@@ -75,6 +79,17 @@ public class RabbitConnectionTest {
         testConnection = new RabbitConnection(mockedCache, mockedFactory);
         testConnection.close();
         assertTrue(testConnection.isClosed());
+    }
+
+    @Test
+    public void connection() throws IOException, RabbitConnectionException {
+        new NonStrictExpectations() {
+            {
+                mockedFactory.newConnection(); times = 1; result = mockedConnection;
+            }
+        };
+        testConnection = new RabbitConnection(mockedCache, mockedFactory);
+        assertEquals(mockedConnection, testConnection.connection());
     }
 
     @Test
@@ -148,12 +163,15 @@ public class RabbitConnectionTest {
     }
 
     @Test
-    public void consumer() throws Exception {
-
-    }
-
-    @Test
-    public void publish_error() throws Exception {
-
+    public void consumer(final @Mocked MessageHandler mockHandler, final @Mocked RabbitConsumer mockConsumer) throws Exception {
+        new NonStrictExpectations() {
+            {
+                mockedFactory.newConnection(); times = 1; result = mockedConnection;
+                new RabbitConsumer(withInstanceOf(RabbitConnection.class), EXCHANGE, SUBJECT, QUEUE, mockHandler); result = mockConsumer;
+            }
+        };
+        testConnection = new RabbitConnection(mockedCache, mockedFactory);
+        Consumer testConsumer = testConnection.consumer(EXCHANGE, SUBJECT, QUEUE, mockHandler);
+        assertNotNull(testConsumer);
     }
 }
