@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class RabbitConnectionFactory {
 
-    private RabbitConnectionCache cache = new RabbitConnectionCache();
+    private final RabbitConnectionCache cache = new RabbitConnectionCache();
 
     public RabbitEx rabbitConnection(final String host, final int port) throws RabbitConnectionException {
         return rabbitConnection (host, port, "", "", "");
