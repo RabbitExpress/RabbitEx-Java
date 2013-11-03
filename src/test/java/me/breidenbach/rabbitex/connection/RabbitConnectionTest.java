@@ -33,7 +33,6 @@ public class RabbitConnectionTest {
     private static final String MESSAGE = "message";
     private static final String ERROR_EXCHANGE = "ERROR_EXCHANGE";
     private static final String ERROR_SUBJECT = "ERROR_SUBJECT";
-    private static final boolean MANDATORY = true;
     private static final String JSON = "{}";
     private static final String EXCHANGE_TYPE = "topic";
 
@@ -101,7 +100,7 @@ public class RabbitConnectionTest {
                 mockedConnection.createChannel(); times = 1; result = mockedChannel;
                 mockedWrapper.toJson(); times = 1; result = JSON;
                 mockedChannel.exchangeDeclare(EXCHANGE, EXCHANGE_TYPE, true); times = 1;
-                mockedChannel.basicPublish(EXCHANGE, SUBJECT, MANDATORY,
+                mockedChannel.basicPublish(EXCHANGE, SUBJECT,
                         (com.rabbitmq.client.AMQP.BasicProperties) withNotNull(), JSON.getBytes()); times = 1;
 
             }
@@ -124,7 +123,7 @@ public class RabbitConnectionTest {
                 mockedWrapper.toJson(); times = 1; result = JSON;
                 mockedWrapper.setErrorExchange(ERROR_EXCHANGE); times = 1;
                 mockedWrapper.setErrorSubject(ERROR_SUBJECT); times = 1;
-                mockedChannel.basicPublish(EXCHANGE, SUBJECT, MANDATORY,
+                mockedChannel.basicPublish(EXCHANGE, SUBJECT,
                         (com.rabbitmq.client.AMQP.BasicProperties) withNotNull(), JSON.getBytes()); times = 1;
 
             }
@@ -154,7 +153,7 @@ public class RabbitConnectionTest {
                 mockedFactory.newConnection(); times = 1; result = mockedConnection;
                 mockedConnection.createChannel(); times = 1; result = mockedChannel;
                 mockedWrapper.toJson(); times = 1; result = JSON;
-                mockedChannel.basicPublish(EXCHANGE, SUBJECT, MANDATORY,
+                mockedChannel.basicPublish(EXCHANGE, SUBJECT,
                         (com.rabbitmq.client.AMQP.BasicProperties) withNotNull(), JSON.getBytes()); times = 1;
             }
         };
