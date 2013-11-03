@@ -21,14 +21,6 @@ public class ConsumerTest {
     public void consume(MessageHandler myHandler) throws RabbitConnectionException, IOException {
         RabbitEx rabbitEx = new RabbitConnectionFactory().rabbitConnection(HOSTNAME, PORT);
         rabbitEx.consumer(EXCHANGE, SUBJECT, QUEUE, myHandler).start();
-        while (System.in.read() != 32) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            }
-        }
-
     }
 
     public static void main(String...args) {
