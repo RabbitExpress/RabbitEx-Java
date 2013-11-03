@@ -13,5 +13,5 @@ public interface MessageHandler {
         ACK
     }
 
-    Response handleMessage(final String jsonMessage);
+    Response handleMessage(final String message);
 }
