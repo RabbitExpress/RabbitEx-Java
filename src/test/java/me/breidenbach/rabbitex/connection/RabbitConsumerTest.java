@@ -15,7 +15,7 @@ import static junit.framework.Assert.assertNotNull;
  * User: Kevin E. Breidenbach
  * Date: 11/3/13
  * Time: 10:44 AM
- * © 2013 Kevin E. Breidenbach
+ * Copyright 2013 Kevin E. Breidenbach
  */
 public class RabbitConsumerTest {
 

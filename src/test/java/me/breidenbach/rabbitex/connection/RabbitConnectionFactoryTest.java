@@ -11,7 +11,7 @@ import static junit.framework.Assert.assertNotNull;
  * User: Kevin E. Breidenbach
  * Date: 11/1/13
  * Time: 7:33 PM
- * © 2013 Kevin E. Breidenbach
+ * Copyright 2013 Kevin E. Breidenbach
  */
 public class RabbitConnectionFactoryTest {
     private final String hostname = "test.com";

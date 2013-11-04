@@ -9,7 +9,7 @@ import java.io.IOException;
  * User: Kevin E. Breidenbach
  * Date: 11/3/13
  * Time: 1:46 PM
- * © 2013 Kevin E. Breidenbach
+ * Copyright 2013 Kevin E. Breidenbach
  */
 public class ConsumerTest {
     private static final String HOSTNAME = "127.0.0.1";

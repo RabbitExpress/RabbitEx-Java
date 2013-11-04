@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 /**
  * Date: 11/1/13
  * Time: 4:08 PM
- * © 2013 Kevin E. Breidenbach
+ * Copyright 2013 Kevin E. Breidenbach
  * @author Kevin E. Breidenbach
  */
 @Component
@@ -17,8 +17,8 @@ public class RabbitConnectionFactory {
     private final RabbitConnectionCache cache = new RabbitConnectionCache();
 
     /*
-     * Creates a connection to a RabbitMQ instance and passes back the RabbitEx instance that can be used
-     * for all message handling
+     * Creates a connection to a RabbitMQ instance and passes back the RabbitEx instance
+     *
      * @param host the hostname of the RabbitMQ service
      * @param port the port number rabbit is running on
      * @return the RabbitEx instance to handle communications with RabbitMQ
@@ -29,8 +29,8 @@ public class RabbitConnectionFactory {
     }
 
     /*
-     * Creates a connection to a RabbitMQ instance and passes back the RabbitEx instance that can be used
-     * for all message handling
+     * Creates a connection to a RabbitMQ instance and passes back the RabbitEx instance
+     *
      * @param host the hostname of the RabbitMQ service
      * @param port the port number rabbit is running on
      * @param virtualHost the name of the virtual host to use (e.g. test)

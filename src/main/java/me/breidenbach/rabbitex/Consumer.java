@@ -6,7 +6,7 @@ import java.io.IOException;
 /**
  * Date: 11/1/13
  * Time: 3:56 PM
- * © 2013 Kevin E. Breidenbach
+ * Copyright 2013 Kevin E. Breidenbach
  * @author Kevin E. Breidenbach
  */
 public interface Consumer {
@@ -14,5 +14,5 @@ public interface Consumer {
      * Starts the consumer
      *
      */
-    void start() throws IOException;
+    public void start() throws IOException;
 }

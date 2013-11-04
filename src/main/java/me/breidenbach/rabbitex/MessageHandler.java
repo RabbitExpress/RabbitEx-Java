@@ -3,7 +3,7 @@ package me.breidenbach.rabbitex;
 /**
  * Date: 11/2/13
  * Time: 5:58 PM
- * © 2013 Kevin E. Breidenbach
+ * Copyright 2013 Kevin E. Breidenbach
  * @author Kevin E. Breidenbach
  */
 public interface MessageHandler {
@@ -18,5 +18,5 @@ public interface MessageHandler {
      *
      * @param message is the String message that will be delivered by the consumer
      */
-    Response handleMessage(final String message);
+    public Response handleMessage(final String message);
 }

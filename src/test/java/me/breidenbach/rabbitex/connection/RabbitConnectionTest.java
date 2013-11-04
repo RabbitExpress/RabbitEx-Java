@@ -23,7 +23,7 @@ import static org.junit.Assert.assertTrue;
  * User: Kevin E. Breidenbach
  * Date: 11/2/13
  * Time: 12:13 PM
- * © 2013 Kevin E. Breidenbach
+ * Copyright 2013 Kevin E. Breidenbach
  */
 public class RabbitConnectionTest {
 

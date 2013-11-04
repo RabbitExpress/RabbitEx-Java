@@ -9,7 +9,7 @@ import static org.junit.Assert.assertEquals;
  * User: Kevin E. Breidenbach
  * Date: 11/1/13
  * Time: 10:15 PM
- * © 2013 Kevin E. Breidenbach
+ * Copyright 2013 Kevin E. Breidenbach
  */
 public class MessageWrapperTest {
     private static final String MESSAGE = "{\"test_message\":\"TEST\"}";

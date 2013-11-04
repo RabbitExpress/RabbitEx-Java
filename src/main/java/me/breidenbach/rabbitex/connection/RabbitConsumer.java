@@ -9,7 +9,7 @@ import java.io.IOException;
 /**
  * Date: 11/1/13
  * Time: 9:17 PM
- * © 2013 Kevin E. Breidenbach
+ * Copyright 2013 Kevin E. Breidenbach
  * @author Kevin E. Breidenbach
  */
 public class RabbitConsumer implements Consumer {

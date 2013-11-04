@@ -7,7 +7,7 @@ import me.breidenbach.rabbitex.MessageHandler;
 /**
  * Date: 11/1/13
  * Time: 9:44 PM
- * © 2013 Kevin E. Breidenbach
+ * Copyright 2013 Kevin E. Breidenbach
  * @author Kevin E. Breidenbach
  */
 class MessageWrapper {

@@ -2,7 +2,7 @@ RabbitEx-Java
 =============
 
 So you want to get into async messaging, but there's a lot to learn and it takes too long. While AMQP is a great protocol, it can be daunting for a development team unfamiliar with it. Well pick RabbitMQ and RabbitEx(press).
-This will allow you to get up and running using a very simple Tibco RVesque subject based addressing system. Whats more is that it will be coming in mutiple languages, so if your shop is full of polyglots, they can all use the same library.
+This will allow you to get up and running using a very simple Tibco RVesque subject based addressing system. Whats more is that it will be coming in multiple languages, so if your shop is full of polyglots, they can all use the same library.
 
 Create a Connection
 -------------------
@@ -33,7 +33,7 @@ In it's simplest form this is as follows:
 rabbitEx.publish(EXCHANGE, SUBJECT, MESSAGES, null);
 ```
 
-Exchanges are separations within the rabbit environment. This could be serivces (e.g. payments, email etc.). 
+Exchanges are separations within the rabbit environment. This could be services (e.g. payments, email etc.).
 It is recommended not to use these for environmental separation (e.g. development and test), and instead use virtual hosts.
 
 Subjects are used to separate messages within the exchange, but wildcards can be used (see later)
