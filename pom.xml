@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>me.breidenbach</groupId>
     <artifactId>rabbitex</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.2</version>
     <packaging>jar</packaging>
     <name>rabbitex</name>
     <description>A simplified RabbitMQ API</description>
