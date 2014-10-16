@@ -14,5 +14,5 @@ public interface Consumer {
      * Starts the consumer
      *
      */
-    public void start() throws IOException;
+    void start() throws IOException;
 }

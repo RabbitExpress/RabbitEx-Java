@@ -23,7 +23,7 @@ public interface RabbitEx extends Closeable {
      * @param options contains map of options {@link Options}
      * @throws RabbitConnectionException any errors from publishing to RabbitMQ
      */
-    public void publish(final String exchange, final String subject,
+    void publish(final String exchange, final String subject,
                  final String message, final Map<Options, String> options) throws RabbitConnectionException;
 
     /*
@@ -36,7 +36,7 @@ public interface RabbitEx extends Closeable {
      * @return the consumer that will receive the messages from the queue
      * @throws RabbitConnectionException any errors receiving messages
      */
-    public Consumer consumer(final String exchange, final String subject,
+    Consumer consumer(final String exchange, final String subject,
                       final String queue, final MessageHandler handler) throws RabbitConnectionException;
 
 }
