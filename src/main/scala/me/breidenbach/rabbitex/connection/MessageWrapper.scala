@@ -53,7 +53,7 @@ case class Message(message: String, errorExchange: String = null, errorSubject: 
 private object ErrorMessageJSONHandler {
   implicit val errorMessageReads = (
       (__ \ "message").read[String] ~
-      (__ \ "errorAction").read[String].map{ string => HandlerResponse(string)}
+      (__ \ "errorAction").read[String].map{ string => HandlerResponse.withName(string)}
     )(ErrorMessage)
 
   def fromJson(json: JsValue): ErrorMessage = Json.fromJson(json).

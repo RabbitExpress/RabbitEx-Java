@@ -13,24 +13,8 @@ object HandlerResponse extends Enumeration {
   type HandlerResponse = Value
   val REJECT, REQUEUE, ACK = Value
 
-  def unapply(name: String): Option[HandlerResponse] = {
-    name.toUpperCase match {
-      case "REJECT" => Some(REJECT)
-      case "REQUEUE" => Some(REQUEUE)
-      case "ACK" => Some(ACK)
-      case _ => None
-    }
-  }
-
-  def apply(name: String): HandlerResponse = {
-    name match {
-      case HandlerResponse(response) => response
-      case _ => throw new IllegalArgumentException("Invalid Handler Response")
-    }
-  }
-
   def fromJava(response: MessageHandler.Response): HandlerResponse = {
-    HandlerResponse(response.toString)
+    HandlerResponse.withName(response.toString)
   }
 
   def toJava(response: HandlerResponse): MessageHandler.Response = {
