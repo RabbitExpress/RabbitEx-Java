@@ -1,6 +1,7 @@
 package me.breidenbach.rabbitex.connection;
 
 import me.breidenbach.rabbitex.RabbitEx;
+import org.springframework.stereotype.Service;
 
 /**
  * Date: 10/15/14
@@ -9,6 +10,7 @@ import me.breidenbach.rabbitex.RabbitEx;
  *
  * @author Kevin E. Breidenbach
  */
+@Service("rabbitConnectionFactory")
 public class RabbitConnectionFactory {
     public RabbitEx rabbitConnection(String listenAddress, int listenPort) throws RabbitConnectionException {
         return rabbitConnection (listenAddress, listenPort, "", "", "");
