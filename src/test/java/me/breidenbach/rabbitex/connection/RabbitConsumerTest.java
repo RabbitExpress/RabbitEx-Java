@@ -9,6 +9,8 @@ import org.junit.Test;
 
 import java.io.IOException;
 
+
+
 import static junit.framework.Assert.assertNotNull;
 
 /**
@@ -17,7 +19,7 @@ import static junit.framework.Assert.assertNotNull;
  * Time: 10:44 AM
  * Copyright 2013 Kevin E. Breidenbach
  */
-public class RabbitConsumerTest {
+ public class RabbitConsumerTest {
 
     private static final String QUEUE = "queue";
     private static final String EXCHANGE = "exchange";
@@ -29,7 +31,6 @@ public class RabbitConsumerTest {
     @Mocked Connection mockConnection;
     @Mocked Channel mockChannel;
     @Mocked MessageHandler mockHandler;
-    @Mocked DefaultConsumer mockDefaultConsumer;
 
     @Test
     public void constructor() throws IOException, RabbitConnectionException {
@@ -85,7 +86,7 @@ public class RabbitConsumerTest {
         };
 
         RabbitConsumer consumer = new RabbitConsumer(mockRabbitConnection, EXCHANGE, SUBJECT, QUEUE, mockHandler);
-        Deencapsulation.invoke(consumer,"handler", mockedEnvelope, message());
+        Deencapsulation.invoke(consumer, "handler", mockedEnvelope, message());
     }
 
     @Test
@@ -102,7 +103,7 @@ public class RabbitConsumerTest {
         };
 
         RabbitConsumer consumer = new RabbitConsumer(mockRabbitConnection, EXCHANGE, SUBJECT, QUEUE, mockHandler);
-        Deencapsulation.invoke(consumer,"handler", mockedEnvelope, message());
+        Deencapsulation.invoke(consumer, "handler", mockedEnvelope, message());
     }
 
     @Test
@@ -115,23 +116,21 @@ public class RabbitConsumerTest {
                 mockChannel.queueBind(QUEUE, EXCHANGE, SUBJECT);
                 mockHandler.handleMessage(anyString); result = MessageHandler.Response.REJECT;
                 mockChannel.basicNack(anyLong, false, false);
-                mockRabbitConnection.publishError(anyString, anyString, MessageHandler.Response.REJECT, anyString);
+                mockRabbitConnection.publish(anyString, anyString, HandlerResponse.REJECT(), anyString);
             }
         };
 
         RabbitConsumer consumer = new RabbitConsumer(mockRabbitConnection, EXCHANGE, SUBJECT, QUEUE, mockHandler);
-        Deencapsulation.invoke(consumer,"handler", mockedEnvelope, messageWithErrorExchange());
+        Deencapsulation.invoke(consumer, "handler", mockedEnvelope, messageWithErrorExchange());
     }
 
     private byte[] messageWithErrorExchange() {
-        MessageWrapper wrapper = new MessageWrapper("TEST", MessageWrapper.MessageType.MESSAGE);
-        wrapper.setErrorExchange(ERROR_EXCHANGE);
-        wrapper.setErrorSubject(ERROR_SUBJECT);
+        MessageWrapper wrapper = new Message("TEST", ERROR_EXCHANGE, ERROR_SUBJECT);
         return wrapper.toJson().getBytes();
     }
 
     private byte[] message() {
-        MessageWrapper wrapper = new MessageWrapper("TEST", MessageWrapper.MessageType.MESSAGE);
+        MessageWrapper wrapper = new Message("TEST", null, null);
         return wrapper.toJson().getBytes();
     }
 }

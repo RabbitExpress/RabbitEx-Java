@@ -19,7 +19,7 @@ import java.util.Map;
  * Copyright 2013 Kevin E. Breidenbach
  * @author Kevin E. Breidenbach
  */
-public class RabbitConnection implements RabbitEx {
+/*public class RabbitConnection implements RabbitEx {
     private static final String EXCHANGE_TYPE = "topic";
 
     private final RabbitConnectionCache cache;
@@ -111,4 +111,4 @@ public class RabbitConnection implements RabbitEx {
         }
         return wrapper;
     }
-}
+}   */

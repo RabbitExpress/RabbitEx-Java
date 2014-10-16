@@ -1,9 +1,9 @@
 package me.breidenbach.rabbitex.connection;
 
-import me.breidenbach.rabbitex.MessageHandler;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 
 /**
  * User: Kevin E. Breidenbach
@@ -11,47 +11,51 @@ import static org.junit.Assert.assertEquals;
  * Time: 10:15 PM
  * Copyright 2013 Kevin E. Breidenbach
  */
-public class MessageWrapperTest {
+ public class MessageWrapperTest {
     private static final String MESSAGE = "{\"test_message\":\"TEST\"}";
     private static final String EXPECTED =
             "{\"message\":\"{\\\"test_message\\\":\\\"TEST\\\"}\",\"messageType\":\"MESSAGE\"}";
+    private static final String EXPECTED_WITH_ERROR_EXCHANGE =
+            "{\"message\":\"{\\\"test_message\\\":\\\"TEST\\\"}\",\"messageType\":\"MESSAGE\",\"errorExchange\":\"ErrorExchange\",\"errorSubject\":\"ErrorSubject\"}";
     private static final String EXPECTED_ERROR =
-            "{\"message\":\"{\\\"test_message\\\":\\\"TEST\\\"}\",\"messageType\":\"ERROR\",\"errorExchange\":\"ErrorExchange\",\"errorSubject\":\"ErrorSubject\",\"errorAction\":\"REJECT\"}";
+            "{\"message\":\"{\\\"test_message\\\":\\\"TEST\\\"}\",\"messageType\":\"ERROR\",\"errorAction\":\"REJECT\"}";
 
     private MessageWrapper testWrapper;
 
     @Test
     public void toJson() {
-        testWrapper = new MessageWrapper(MESSAGE);
+        testWrapper = new Message(MESSAGE, null, null);
 
         String json = testWrapper.toJson();
-        assertEquals(EXPECTED, json);
+        assertThat(EXPECTED, is(json));
     }
 
     @Test
     public void fromJson() {
-        MessageWrapper wrapper = MessageWrapper.fromJson(EXPECTED);
-        assertEquals(MessageWrapper.MessageType.MESSAGE, wrapper.getMessageType());
-        assertEquals(MESSAGE, wrapper.getMessage());
+        MessageWrapper wrapper = MessageWrapper$.MODULE$.fromJson(EXPECTED);
+        assertThat(MessageType$.MODULE$.MESSAGE(), is(wrapper.messageType()));
+        assertThat(MESSAGE, is(wrapper.message()));
     }
 
     @Test
-    public void toJsonError() {
-        testWrapper = new MessageWrapper(MESSAGE, MessageWrapper.MessageType.ERROR);
-        testWrapper.setErrorExchange("ErrorExchange");
-        testWrapper.setErrorSubject("ErrorSubject");
-        testWrapper.setErrorAction(MessageHandler.Response.REJECT);
+    public void toJsonWithErrorExchange() {
+        testWrapper = new Message(MESSAGE, "ErrorExchange", "ErrorSubject");
         String json = testWrapper.toJson();
-        assertEquals(EXPECTED_ERROR, json);
+        assertThat(EXPECTED_WITH_ERROR_EXCHANGE, is(json));
+    }
+    @Test
+    public void toJsonError() {
+        testWrapper = new ErrorMessage(MESSAGE, HandlerResponse.REJECT());
+        String json = testWrapper.toJson();
+        assertThat(EXPECTED_ERROR, is(json));
     }
 
     @Test
     public void fromJsonError() {
-        MessageWrapper wrapper = MessageWrapper.fromJson(EXPECTED_ERROR);
-        assertEquals(MessageWrapper.MessageType.ERROR, wrapper.getMessageType());
-        assertEquals(MESSAGE, wrapper.getMessage());
-        assertEquals("ErrorExchange", wrapper.getErrorExchange());
-        assertEquals("ErrorSubject", wrapper.getErrorSubject());
-        assertEquals(MessageHandler.Response.REJECT, wrapper.getErrorAction());
+        Message wrapper = (Message) MessageWrapper$.MODULE$.fromJson(EXPECTED_WITH_ERROR_EXCHANGE);
+        assertThat(MessageType.MESSAGE(), is(wrapper.messageType()));
+        assertThat(MESSAGE, is(wrapper.message()));
+        assertThat("ErrorExchange", is(wrapper.errorExchange()));
+        assertThat("ErrorSubject", is(wrapper.errorSubject()));
     }
 }

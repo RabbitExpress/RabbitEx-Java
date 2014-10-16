@@ -12,7 +12,7 @@ import java.io.IOException;
  * Copyright 2013 Kevin E. Breidenbach
  * @author Kevin E. Breidenbach
  */
-public class RabbitConsumer implements Consumer {
+/*public class RabbitConsumer implements Consumer {
     private static final boolean DURABLE = true;
     private static final boolean AUTO_DELETE = false;
     private static final boolean EXCLUSIVE = false;
@@ -90,3 +90,4 @@ public class RabbitConsumer implements Consumer {
         }
     }
 }
+*/

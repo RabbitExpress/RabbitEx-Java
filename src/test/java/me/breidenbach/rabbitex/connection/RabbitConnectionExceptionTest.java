@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
  * Time: 8:58 PM
  * Copyright 2013 Kevin E. Breidenbach
  */
-public class RabbitConnectionExceptionTest {
+ public class RabbitConnectionExceptionTest {
     @Test
     public void getMessage() {
         final String message = "Test";

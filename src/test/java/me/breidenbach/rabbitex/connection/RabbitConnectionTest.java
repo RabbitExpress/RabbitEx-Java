@@ -25,7 +25,7 @@ import static org.junit.Assert.assertTrue;
  * Time: 12:13 PM
  * Copyright 2013 Kevin E. Breidenbach
  */
-public class RabbitConnectionTest {
+/*public class RabbitConnectionTest {
 
     private static final String EXCHANGE = "exchange";
     private static final String SUBJECT = "subject";
@@ -174,3 +174,4 @@ public class RabbitConnectionTest {
         assertNotNull(testConsumer);
     }
 }
+*/

@@ -13,7 +13,7 @@ import static junit.framework.Assert.assertNotNull;
  * Time: 7:33 PM
  * Copyright 2013 Kevin E. Breidenbach
  */
-public class RabbitConnectionFactoryTest {
+/* public class RabbitConnectionFactoryTest {
     private final String hostname = "test.com";
     private final int port = 1;
     private final String virtualHost = "";
@@ -53,4 +53,4 @@ public class RabbitConnectionFactoryTest {
 
         factory.rabbitConnection(hostname, port);
     }
-}
+}    */
