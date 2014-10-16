@@ -42,13 +42,11 @@ private object ErrorMessage {
     getOrElse(throw new IllegalArgumentException("unable to parse json"))
 }
 
-case class Message(message: String, errorExchange: String = null, errorSubject: String = null) extends MessageWrapper {
+case class Message(message: String, errorExchange: Option[String] = None, errorSubject: Option[String] = None) extends MessageWrapper {
   override val messageType = MessageType.MESSAGE
 
   def convert(msg: Message): (String, String, Option[String], Option[String]) = {
-    val errorEx = if (msg.errorExchange == null) None else Some(msg.errorExchange)
-    val errorSub = if (msg.errorSubject == null) None else Some(msg.errorSubject)
-    (msg.message, msg.messageType.toString, errorEx, errorSub)
+    (msg.message, msg.messageType.toString, msg.errorExchange, msg.errorSubject)
   }
 
   implicit val messageWrites = (
@@ -61,23 +59,16 @@ case class Message(message: String, errorExchange: String = null, errorSubject: 
 }
 
 private object Message {
-  def convert(msg:(String, Option[String], Option[String])): Message = {
-    msg match {
-      case (message, None, _) => Message(message)
-      case (message, Some(errorExchange), None) => Message(message, errorExchange)
-      case (message, Some(errorExchange), Some(errorSubject)) => Message(message, errorExchange, errorSubject)
-    }
-  }
 
   implicit val messageReads = (
       (__ \ "message").read[String] ~
       (__ \ "errorExchange").readNullable[String] ~
       (__ \ "errorSubject").readNullable[String]
-    ).tupled
+    )((message, errorExchange, errorSubject) => Message(message, errorExchange, errorSubject))
 
-  def fromJson(json: JsValue): Message = {
-      convert(Json.fromJson(json).getOrElse(throw new IllegalArgumentException("unable to parse json")))
-  }
+  def fromJson(json: JsValue): Message = Json.fromJson(json).
+    getOrElse(throw new IllegalArgumentException("unable to parse json"))
+
 }
 
 object MessageWrapper {

@@ -30,7 +30,7 @@ private[connection] case class RabbitConnection(host: String, port: Int, virtual
   override def publish(exchange: String, subject: String, message: String, options: util.Map[Options, String]): Unit = {
     val errorExchange = if (options.containsKey(ERROR_EXCHANGE)) options.get(ERROR_EXCHANGE) else ""
     val errorSubject = if (options.containsKey(ERROR_SUBJECT)) options.get(ERROR_SUBJECT) else ""
-    val wrapper: MessageWrapper = Message(message = message, errorExchange = errorExchange, errorSubject = errorSubject)
+    val wrapper: MessageWrapper = Message(message = message, errorExchange = Some(errorExchange), errorSubject = Some(errorSubject))
     publish(exchange, subject, wrapper)
   }
 

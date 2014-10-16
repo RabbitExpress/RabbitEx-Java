@@ -1,6 +1,8 @@
 package me.breidenbach.rabbitex.connection;
 
 import org.junit.Test;
+import scala.Option;
+import scala.Some;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -12,6 +14,8 @@ import static org.hamcrest.core.Is.is;
  * Copyright 2013 Kevin E. Breidenbach
  */
  public class MessageWrapperTest {
+    private static final Option<String> NONE = Option.apply(null);
+
     private static final String MESSAGE = "{\"test_message\":\"TEST\"}";
     private static final String EXPECTED =
             "{\"message\":\"{\\\"test_message\\\":\\\"TEST\\\"}\",\"messageType\":\"MESSAGE\"}";
@@ -24,7 +28,7 @@ import static org.hamcrest.core.Is.is;
 
     @Test
     public void toJson() {
-        testWrapper = new Message(MESSAGE, null, null);
+        testWrapper = new Message(MESSAGE, NONE, NONE);
 
         String json = testWrapper.toJson();
         assertThat(EXPECTED, is(json));
@@ -39,7 +43,7 @@ import static org.hamcrest.core.Is.is;
 
     @Test
     public void toJsonWithErrorExchange() {
-        testWrapper = new Message(MESSAGE, "ErrorExchange", "ErrorSubject");
+        testWrapper = new Message(MESSAGE, new Some<>("ErrorExchange"), new Some<>("ErrorSubject"));
         String json = testWrapper.toJson();
         assertThat(EXPECTED_WITH_ERROR_EXCHANGE, is(json));
     }
@@ -55,7 +59,7 @@ import static org.hamcrest.core.Is.is;
         Message wrapper = (Message) MessageWrapper$.MODULE$.fromJson(EXPECTED_WITH_ERROR_EXCHANGE);
         assertThat(MessageType.MESSAGE(), is(wrapper.messageType()));
         assertThat(MESSAGE, is(wrapper.message()));
-        assertThat("ErrorExchange", is(wrapper.errorExchange()));
-        assertThat("ErrorSubject", is(wrapper.errorSubject()));
+        assertThat("ErrorExchange", is(wrapper.errorExchange().get()));
+        assertThat("ErrorSubject", is(wrapper.errorSubject().get()));
     }
 }

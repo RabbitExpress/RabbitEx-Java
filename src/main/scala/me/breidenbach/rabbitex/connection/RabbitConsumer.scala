@@ -72,9 +72,9 @@ private[connection] class RabbitConsumer(connection: RabbitConnection, exchange:
 
   private def sendErrorMessage(wrapper: MessageWrapper, response: HandlerResponse.HandlerResponse): Unit = {
     wrapper match {
-      case Message(message, errorExchange, errorSubject) =>
-        if (errorExchange != null && !errorExchange.isEmpty)
-          connection.publish(errorExchange, errorSubject, response, wrapper.message)
+      case Message(message, Some(errorExchange), errorSubject) =>
+          connection.publish(errorExchange, errorSubject.getOrElse(""), response, wrapper.message)
+      case _ =>
     }
   }
 }

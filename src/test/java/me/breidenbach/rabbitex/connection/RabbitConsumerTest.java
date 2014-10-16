@@ -6,6 +6,8 @@ import mockit.Deencapsulation;
 import mockit.Expectations;
 import mockit.Mocked;
 import org.junit.Test;
+import scala.Option;
+import scala.Some;
 
 import java.io.IOException;
 
@@ -27,6 +29,7 @@ import static junit.framework.Assert.assertNotNull;
     private static final String ERROR_EXCHANGE = "ERROR_EXCHANGE";
     private static final String ERROR_SUBJECT = "ERROR_SUBJECT";
 
+    private static final Option<String> NONE = Option.apply(null);
     @Mocked RabbitConnection mockRabbitConnection;
     @Mocked Connection mockConnection;
     @Mocked Channel mockChannel;
@@ -125,12 +128,12 @@ import static junit.framework.Assert.assertNotNull;
     }
 
     private byte[] messageWithErrorExchange() {
-        MessageWrapper wrapper = new Message("TEST", ERROR_EXCHANGE, ERROR_SUBJECT);
+        MessageWrapper wrapper = new Message("TEST", new Some<>(ERROR_EXCHANGE), new Some<>(ERROR_SUBJECT));
         return wrapper.toJson().getBytes();
     }
 
     private byte[] message() {
-        MessageWrapper wrapper = new Message("TEST", null, null);
+        MessageWrapper wrapper = new Message("TEST", NONE, NONE);
         return wrapper.toJson().getBytes();
     }
 }
