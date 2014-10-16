@@ -32,6 +32,16 @@ case class ErrorMessage(message: String, errorAction: HandlerResponse.HandlerRes
   override def toJson: String = Json.toJson(this).toString()
 }
 
+private object ErrorMessage {
+  implicit val errorMessageReads = (
+      (__ \ "message").read[String] ~
+      (__ \ "errorAction").read[String].map{ string => HandlerResponse.withName(string)}
+    )((message, errorAction) => ErrorMessage(message, errorAction))
+
+  def fromJson(json: JsValue): ErrorMessage = Json.fromJson(json).
+    getOrElse(throw new IllegalArgumentException("unable to parse json"))
+}
+
 case class Message(message: String, errorExchange: String = null, errorSubject: String = null) extends MessageWrapper {
   override val messageType = MessageType.MESSAGE
 
@@ -50,17 +60,7 @@ case class Message(message: String, errorExchange: String = null, errorSubject: 
   override def toJson: String = Json.toJson(this).toString()
 }
 
-private object ErrorMessageJSONHandler {
-  implicit val errorMessageReads = (
-      (__ \ "message").read[String] ~
-      (__ \ "errorAction").read[String].map{ string => HandlerResponse.withName(string)}
-    )(ErrorMessage)
-
-  def fromJson(json: JsValue): ErrorMessage = Json.fromJson(json).
-    getOrElse(throw new IllegalArgumentException("unable to parse json"))
-}
-
-private object MessageJSONHandler {
+private object Message {
   def convert(msg:(String, Option[String], Option[String])): Message = {
     msg match {
       case (message, None, _) => Message(message)
@@ -85,8 +85,8 @@ object MessageWrapper {
     val parsedJson = Json.parse(json)
     val messageType = (parsedJson \ "messageType").toString()
     messageType match {
-      case "\"MESSAGE\"" => MessageJSONHandler.fromJson(parsedJson)
-      case "\"ERROR\"" => ErrorMessageJSONHandler.fromJson(parsedJson)
+      case "\"MESSAGE\"" => Message.fromJson(parsedJson)
+      case "\"ERROR\"" => ErrorMessage.fromJson(parsedJson)
     }
   }
 }
