@@ -16,10 +16,7 @@ import scala.collection.mutable
  * @author Kevin E. Breidenbach
  */
 private[connection] case class RabbitConnection(host: String, port: Int, virtualHost: String, username: String,
-                                                password: String, factory: ConnectionFactory) extends RabbitEx {
-
-  def this(host: String, port: Int, virtualHost: String = "", username: String = "", password: String = "") =
-    this(host, port, virtualHost, username, password, null)
+                                                password: String, factory: ConnectionFactory = null) extends RabbitEx {
 
   val key: String = host + port + virtualHost + username
   val connection = prepareConnection()
@@ -27,14 +24,14 @@ private[connection] case class RabbitConnection(host: String, port: Int, virtual
 
   private val EXCHANGE_TYPE = "topic"
 
-  override def publish(exchange: String, subject: String, message: String, options: util.Map[Options, String]): Unit = {
-    val errorExchange = if (options.containsKey(ERROR_EXCHANGE)) options.get(ERROR_EXCHANGE) else ""
-    val errorSubject = if (options.containsKey(ERROR_SUBJECT)) options.get(ERROR_SUBJECT) else ""
-    val wrapper: MessageWrapper = Message(message = message, errorExchange = Some(errorExchange), errorSubject = Some(errorSubject))
+  override def publish(exchange: String, subject: String, message: String, options: util.Map[Options, String] = null): Unit = {
+    val errorExchange = if (options != null && options.containsKey(ERROR_EXCHANGE)) Some(options.get(ERROR_EXCHANGE)) else None
+    val errorSubject = if (options != null && options.containsKey(ERROR_SUBJECT)) Some(options.get(ERROR_SUBJECT)) else None
+    val wrapper: MessageWrapper = Message(message = message, errorExchange = errorExchange, errorSubject = errorSubject)
     publish(exchange, subject, wrapper)
   }
 
-  def publish(exchange: String, subject: String, errorAction: HandlerResponse.HandlerResponse, message: String): Unit = {
+  def publishError(exchange: String, subject: String, errorAction: HandlerResponse.HandlerResponse, message: String): Unit = {
     val wrapper: MessageWrapper = ErrorMessage(message, errorAction)
     publish(exchange, subject, wrapper)
   }
@@ -42,22 +39,19 @@ private[connection] case class RabbitConnection(host: String, port: Int, virtual
   def publish(exchange: String, subject: String, wrapper: MessageWrapper): Unit = {
     val builder =  new AMQP.BasicProperties.Builder()
     val json = wrapper.toJson
-    val headers = new util.HashMap[String, AnyRef]()
-    headers.put("type", wrapper.messageType)
     builder.deliveryMode(2)
     builder.timestamp(Calendar.getInstance().getTime)
-    builder.headers(headers)
     try {
       val channel = connection.createChannel()
       channel.exchangeDeclare(exchange, EXCHANGE_TYPE, true)
       channel.basicPublish(exchange, subject, builder.build(), json.getBytes)
     } catch {
-      case e: IOException =>throw new RabbitConnectionException("Unable to publish message", e);
+      case e: IOException => throw new RabbitConnectionException("Unable to publish message", e);
     }
   }
 
   override def consumer(exchange: String, subject: String, queue: String, handler: MessageHandler): Consumer = {
-    new RabbitConsumer(this, exchange, subject, queue, handler)
+    RabbitConsumer(this, exchange, subject, queue, handler)
   }
 
   override def close(): Unit = {
@@ -65,21 +59,26 @@ private[connection] case class RabbitConnection(host: String, port: Int, virtual
     closed = true
   }
 
-  private def prepareConnection(): Connection = {
-    try {
-      factory.newConnection()
-    }
-    catch {
-      case e: IOException =>
-        throw new RabbitConnectionException("Unable to create connection: " + e.getMessage, e)
-    }
+  private def prepareConnection(): Connection = factory match {
+    case null => null
+    case _ =>
+      try {
+        factory.newConnection()
+      }
+      catch {
+        case e: IOException =>
+          throw new RabbitConnectionException("Unable to create connection: " + e.getMessage, e)
+      }
   }
 }
 
 object RabbitConnection {
+  private implicit val factory = new ConnectionFactory
   private val connections = new mutable.WeakHashMap[String, RabbitConnection]
 
-  def rabbitConnection(host: String, port: Int, virtualHost: String = "", username: String = "", password: String = ""): RabbitEx = {
+  // The implicit factory enables testing
+  def newConnection(host: String, port: Int, virtualHost: String = "", username: String = "", password: String = "")
+                   (implicit factory: ConnectionFactory): RabbitEx = {
     val conn = new RabbitConnection(host, port, virtualHost, username, password)
     connections.contains(conn.key) match {
       case true =>
@@ -94,12 +93,11 @@ object RabbitConnection {
     connections.remove(rabbitConnection.key)
   }
 
-  private def cacheNewConnection(rabbitConnection: RabbitConnection): RabbitEx = {
-    val factory = new ConnectionFactory
+  private def cacheNewConnection(rabbitConnection: RabbitConnection)(implicit factory: ConnectionFactory): RabbitEx = {
     factory.setHost(rabbitConnection.host)
     factory.setPort(rabbitConnection.port)
-    if (!rabbitConnection.username.isEmpty) factory.setUsername(rabbitConnection.username)
-    if (!rabbitConnection.password.isEmpty) factory.setPassword(rabbitConnection.password)
+    if (rabbitConnection.username != null && !rabbitConnection.username.isEmpty) factory.setUsername(rabbitConnection.username)
+    if (rabbitConnection.password != null && !rabbitConnection.password.isEmpty) factory.setPassword(rabbitConnection.password)
 
     val rabbitExConnection = rabbitConnection.copy(factory = factory)
     connections(rabbitExConnection.key) = rabbitExConnection

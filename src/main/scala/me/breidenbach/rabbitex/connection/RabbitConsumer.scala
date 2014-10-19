@@ -2,8 +2,7 @@ package me.breidenbach.rabbitex.connection
 
 import java.io.IOException
 
-import com.rabbitmq.client.impl.AMQBasicProperties
-import com.rabbitmq.client.{Envelope, DefaultConsumer}
+import com.rabbitmq.client.{AMQP, Envelope, DefaultConsumer}
 import me.breidenbach.rabbitex.MessageHandler.Response
 import me.breidenbach.rabbitex.{MessageHandler, Consumer}
 
@@ -13,7 +12,7 @@ import me.breidenbach.rabbitex.{MessageHandler, Consumer}
  * Copyright 2014 Kevin E. Breidenbach
  * @author Kevin E. Breidenbach
  */
-private[connection] class RabbitConsumer(connection: RabbitConnection, exchange: String, subject: String,
+private[connection] case class RabbitConsumer(connection: RabbitConnection, exchange: String, subject: String,
                                          queue: String, handler: MessageHandler) extends Consumer {
   val DURABLE = true
   val AUTO_DELETE = false
@@ -37,26 +36,19 @@ private[connection] class RabbitConsumer(connection: RabbitConnection, exchange:
     channel.basicConsume(queue, AUTO_ACK, defaultConsumer())
   }
 
-  private def defaultConsumer(): DefaultConsumer = {
+  private[connection] def defaultConsumer(): DefaultConsumer = {
     new DefaultConsumer(channel) {
-      def handleDelivery(consumerTag: String, envelope: Envelope, properties: AMQBasicProperties, body: Array[Byte]): Unit = {
-        handler(envelope, body)
+      override def handleDelivery(consumerTag: String, envelope: Envelope, properties: AMQP.BasicProperties, body: Array[Byte]): Unit = {
+        handleMessage(envelope, body)
       }
     }
   }
 
-  private[connection] def handler(envelope: Envelope, body: Array[Byte]) {
+  private[connection] def handleMessage(envelope: Envelope, body: Array[Byte]) {
     val json = new String(body)
     val deliveryTag = envelope.getDeliveryTag
     val wrapper: MessageWrapper = MessageWrapper.fromJson(json)
     val response = handler.handleMessage(wrapper.message)
-
-    wrapper match {
-      case Message(message, errorExchange, errorSubject) =>
-        null
-      case ErrorMessage(message, errorAction) =>
-        null
-    }
 
     response match {
       case Response.ACK =>
@@ -73,8 +65,9 @@ private[connection] class RabbitConsumer(connection: RabbitConnection, exchange:
   private def sendErrorMessage(wrapper: MessageWrapper, response: HandlerResponse.HandlerResponse): Unit = {
     wrapper match {
       case Message(message, Some(errorExchange), errorSubject) =>
-          connection.publish(errorExchange, errorSubject.getOrElse(""), response, wrapper.message)
+          connection.publishError(errorExchange, errorSubject.getOrElse(""), response, wrapper.message)
       case _ =>
     }
   }
 }
+

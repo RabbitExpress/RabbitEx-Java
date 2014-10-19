@@ -1,11 +1,19 @@
 package me.breidenbach.rabbitex.connection;
 
+import com.rabbitmq.client.ConnectionFactory;
+import me.breidenbach.rabbitex.RabbitEx;
 import mockit.Expectations;
 import mockit.Mocked;
+import mockit.Tested;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.test.util.ReflectionTestUtils;
 
-import static junit.framework.Assert.assertNotNull;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.sameInstance;
+import static org.hamcrest.Matchers.is;
+
 
 /**
  * User: Kevin E. Breidenbach
@@ -13,44 +21,38 @@ import static junit.framework.Assert.assertNotNull;
  * Time: 7:33 PM
  * Copyright 2013 Kevin E. Breidenbach
  */
-/* public class RabbitConnectionFactoryTest {
-    private final String hostname = "test.com";
-    private final int port = 1;
-    private final String virtualHost = "";
-    private final String username = "";
+public class RabbitConnectionFactoryTest {
 
+    @Tested
     private RabbitConnectionFactory factory;
 
-    @Mocked(stubOutClassInitialization = true) RabbitConnection mockedConnection;
+    @Mocked(stubOutClassInitialization = true)
+    private RabbitConnection$ mockRabbitConnection$;
+
+    @Mocked
+    private RabbitEx mockRabbitConnection;
 
 
     @Before
     public void setUp() {
         factory = new RabbitConnectionFactory();
-    }
-
-    @Test
-    public void rabbitConnectionNew(final @Mocked RabbitConnectionCache cache) throws RabbitConnectionException {
+        ReflectionTestUtils.setField(factory, "rabbitConnection", mockRabbitConnection$);
 
         new Expectations() {
             {
-                cache.retrieve(hostname, port, virtualHost, username); result = null;
-                cache.cache(hostname, port, virtualHost, username, withInstanceOf(RabbitConnection.class));
+                mockRabbitConnection$.newConnection(anyString, anyInt, anyString,
+                        anyString, anyString, withInstanceOf(ConnectionFactory.class)); result = mockRabbitConnection;
             }
         };
-
-        assertNotNull(factory.rabbitConnection(hostname, port));
     }
 
     @Test
-    public void rabbitConnectionCached(final @Mocked RabbitConnectionCache cache) throws RabbitConnectionException {
-
-        new Expectations() {
-            {
-                cache.retrieve(hostname, port, virtualHost, username); result = mockedConnection;
-            }
-        };
-
-        factory.rabbitConnection(hostname, port);
+    public void rabbitConnectionNew() throws RabbitConnectionException {
+        final String hostname = "test.com";
+        final int port = 1;
+        final String virtualHost = "";
+        final String username = "";
+        final RabbitEx connection = factory.rabbitConnection(hostname, port, virtualHost, username, null);
+        assertThat(connection, is(sameInstance(mockRabbitConnection)));
     }
-}    */
+}
