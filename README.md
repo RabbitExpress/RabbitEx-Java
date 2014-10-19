@@ -1,7 +1,7 @@
 CI Build
 ========
 
-[![Build Status](https://travis-ci.org/RabbitExpress/RabbitEx-Java.svg?branch=development)](https://travis-ci.org/RabbitExpress/RabbitEx-Java/)
+[![Build Status](https://travis-ci.org/RabbitExpress/RabbitEx-Java.svg?branch=master)](https://travis-ci.org/RabbitExpress/RabbitEx-Java/)
 
 RabbitEx-Java & Scala
 =====================
