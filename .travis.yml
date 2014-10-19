@@ -1,0 +1,5 @@
+ language: java
+ scala:
+   - "2.11.3"
+ jdk:
+   - oraclejdk7
