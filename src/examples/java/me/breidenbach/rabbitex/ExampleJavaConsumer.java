@@ -1,17 +1,18 @@
-import me.breidenbach.rabbitex.MessageHandler;
-import me.breidenbach.rabbitex.RabbitEx;
+package me.breidenbach.rabbitex;
+
 import me.breidenbach.rabbitex.connection.RabbitConnectionException;
 import me.breidenbach.rabbitex.connection.RabbitConnectionFactory;
 
 import java.io.IOException;
 
 /**
- * User: Kevin E. Breidenbach
- * Date: 11/3/13
- * Time: 1:46 PM
- * Copyright 2013 Kevin E. Breidenbach
+ * Date: 10/19/14
+ * Time: 9:58 PM
+ * Copyright 2014 Kevin E. Breidenbach
+ *
+ * @author Kevin E. Breidenbach
  */
-public class ConsumerTest {
+public class ExampleJavaConsumer {
     private static final String HOSTNAME = "127.0.0.1";
     private static final int PORT = 5672;
     private static final String EXCHANGE = "my-exchange";
@@ -24,7 +25,7 @@ public class ConsumerTest {
     }
 
     public static void main(String...args) {
-        ConsumerTest test = new ConsumerTest();
+        ExampleJavaConsumer test = new ExampleJavaConsumer();
         try {
             test.consume(new MyHandler());
         } catch (RabbitConnectionException|IOException e) {

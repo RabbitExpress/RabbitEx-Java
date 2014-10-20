@@ -72,8 +72,16 @@ private[connection] case class RabbitConnection(host: String, port: Int, virtual
   }
 }
 
-object RabbitConnection {
+object RabbitFactory {
   private implicit val factory = new ConnectionFactory
+
+  def newConnection(host: String, port: Int, virtualHost: String = "", username: String = "", password: String = ""): RabbitEx = {
+    RabbitConnection.newConnection(host, port, virtualHost, username, password)
+  }
+}
+
+object RabbitConnection {
+
   private val connections = new mutable.WeakHashMap[String, RabbitConnection]
 
   // The implicit factory enables testing
