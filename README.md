@@ -8,7 +8,7 @@ Version 2.0
 Now with a scala backbone that can easily be used by scala apps and a Java wrapper with the same interface from 1.0
 
 So you want to get into async messaging, but there's a lot to learn and it takes too long. While AMQP is a great protocol, it can be daunting for a development team unfamiliar with it. Well pick RabbitMQ and RabbitEx(press).
-This will allow you to get up and running using a very simple Tibco RVesque subject based addressing system. Whats more is that it will be coming in multiple languages, so if your shop is full of polyglots, they can all use the same library.
+This will allow you to get up and running using a very simple Tibco RVesque subject based addressing system. What's more is that it will be coming in multiple languages, so if your shop is full of polyglots, they can all use the same library.
 
 Create a Connection
 -------------------
