@@ -17,7 +17,7 @@ public class ExampleJavaConsumer {
     private static final int PORT = 5672;
     private static final String EXCHANGE = "my-exchange";
     private static final String SUBJECT = "my-subject";
-    private static final String QUEUE = "my-queue";
+    private static final String QUEUE = "my-java-queue";
 
     public void consume(MessageHandler myHandler) throws RabbitConnectionException, IOException {
         RabbitEx rabbitEx = new RabbitConnectionFactory().rabbitConnection(HOSTNAME, PORT);

@@ -26,5 +26,6 @@ object ExampleScalaPublisher {
 
   def main(args: Array[String]): Unit = {
     ExampleScalaPublisher(HOSTNAME, PORT, EXCHANGE, SUBJECT).sendMessage(MESSAGE)
+    sys.exit()
   }
 }

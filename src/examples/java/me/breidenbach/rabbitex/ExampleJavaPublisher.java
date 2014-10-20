@@ -29,9 +29,7 @@ public class ExampleJavaPublisher {
         ExampleJavaPublisher test = new ExampleJavaPublisher();
         try {
             test.sendMessage(MESSAGE);
-        } catch (RabbitConnectionException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (RabbitConnectionException | IOException e) {
             e.printStackTrace();
         }
     }

@@ -28,7 +28,7 @@ object ExampleScalaConsumer {
   val PORT = 5672
   val EXCHANGE = "my-exchange"
   val SUBJECT = "my-subject"
-  val QUEUE = "my-queue"
+  val QUEUE = "my-scala-queue"
 
   def main(args: Array[String]): Unit = {
     val consumer = ExampleScalaConsumer(HOSTNAME, PORT, EXCHANGE, SUBJECT, QUEUE)
